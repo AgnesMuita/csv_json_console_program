@@ -2,8 +2,6 @@ import csv
 import json
 import hashlib
 import pandas as pd
-
-
  
 #convert csv to json
 def make_json(csvFilePath, jsonFilePath):
@@ -32,9 +30,11 @@ with open(filename,'rb')as f:
   print (sha256_hash.hexdigest())
 
 #append sha256 to csv line
-df = pd.read_csv("NFT_CSV_file_csv.csv")
+df = pd.read_csv(csvFilePath)
 df["sha256"] = (sha256_hash.hexdigest())
-df.to_csv("filename.csv", index=False)
+df.to_csv(csvFilePath+ ".output.csv", index=False)
+
+
 
 
 
