@@ -5,10 +5,14 @@ import hashlib
 import pandas as pd
 from pathlib import Path
 import os
+import shutil
 
 jsonoutputlist=[]
 #convert csv to json
-def make_json(csvFilePath, jsonFilePath):
+def make_json(csvFilePath):
+
+    jsonFilePath="D:/Javascript/hng/hashing_script_with_python/nftjsonfile"
+
     # open csv reader called DictReader
     with open(csvFilePath, encoding='utf-8') as csvf:
       csvReader = csv.DictReader(csvf, fieldnames=("No","Name","Hash","UUID"))
@@ -16,31 +20,44 @@ def make_json(csvFilePath, jsonFilePath):
       for row in csvReader:
         out=json.dumps(row, indent=4)
         n=json.loads(out)
-        myData = {'format' : 'CHIP-0007'}
-        myData.update(row)
-        jsonoutput = open(jsonFilePath+'\\'+str(n['No'])+'.json','w')
-        jsonoutput.write(out)
-    jsonoutput.close()
-    csvf.close()
+        if n['No'] != 'No':
+          jsonoutput = open(jsonFilePath+'/'+str(n['No'])+'.json','w')
+          jsonoutput.write(out)
+          jsonoutput.close()
+      csvf.close()
 
 
 csvFilePath=input('Enter the absolute path of the csv file')
-jsonFilePath=input('Enter the absolute path of the json file')
 
-  # calculate sha256
-FilePath = "CHIP-0007.json"
-sha256_hash = hashlib.sha256()
-with open(FilePath,'rb')as f:
-  for byte_block in iter(lambda: f.read(4096),b""):
-    sha256_hash.update(byte_block)
-  print (sha256_hash.hexdigest())
 
-  # #append sha256 to csv line
-  df = pd.read_csv(csvFilePath)
-  df["sha256"] = (sha256_hash.hexdigest())
-  df.to_csv(csvFilePath+ ".output.csv", index=False)
 
-make_json(csvFilePath,jsonFilePath)
+make_json(csvFilePath)
+
+
+# directory = "nftjsonfile"
+# parent_dir = Path(Path.cwd()).parent
+# if not os.path.exists("nftjsonfile"):
+#   path = os.path.join(parent_dir, directory)
+#   os.mkdir(path)
+
+
+# calculate sha256
+FilePath = "D:/Javascript/hng/hashing_script_with_python/nftjsonfile"
+for filename in os.listdir(FilePath):
+  f=os.path.join(FilePath, filename)
+  if os.path.isfile(f):
+    print (f)
+    sha256_hash = hashlib.sha256()
+    with open(f,'rb')as f:
+      for byte_block in iter(lambda: f.read(4096),b""):
+        sha256_hash.update(byte_block)
+        print (sha256_hash.hexdigest())
+
+    # append sha256 to csv line
+    df = pd.read_csv(csvFilePath)
+    df["sha256"] = (sha256_hash.hexdigest())
+    df.to_csv(csvFilePath+ ".output.csv", index=False)
+
 
 
 
