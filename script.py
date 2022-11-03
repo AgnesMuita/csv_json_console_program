@@ -45,12 +45,12 @@ def calculate_hash():
       with open(f,'rb')as f:
         for byte_block in iter(lambda: f.read(4096),b""):
           sha256_hash.update(byte_block)
-          print (sha256_hash.hexdigest())
 
       # append sha256 to csv line
       df = pd.read_csv(csvFilePath)
       df["sha256"] = (sha256_hash.hexdigest())
       df.to_csv(csvFilePath+ ".output.csv", index=False)
+
 calculate_hash()
 
 
