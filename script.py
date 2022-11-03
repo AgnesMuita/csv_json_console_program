@@ -34,7 +34,8 @@ def make_json(csvFilePath):
       csvf.close()
 
 
-csvFilePath = os.getcwd()+'\\'+ input('enter the name of csv file ')
+# csvFilePath = os.getcwd()+'\\'+ input('enter the name of csv file ')
+csvFilePath = os.getcwd()+'\\' + 'HNGi9 CSV FILE - Sheet1.csv'
 make_json(csvFilePath)
 
 
