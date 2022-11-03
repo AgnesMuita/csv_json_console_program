@@ -11,18 +11,18 @@ Python 3
 ## Setup
 Clone the project to get started: 
 
-git clone https://github.com/AgnesMuita/hashing_script.git
+**git clone https://github.com/AgnesMuita/hashing_script.git**
 
 To set up the project, 
 
 Open the project from its the root directory and install required modules by running:
 
 
-pip install -r requirements.txt
+**pip install -r requirements.txt**
 
 Then run the program using: 
 
-python scripts.py
+**python scripts.py**
 
 
 This will prompt you to add the name of the CSV file. In this case, add "HNGi9 CSV FILE - Sheet1.csv".
