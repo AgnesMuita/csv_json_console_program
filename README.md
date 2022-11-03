@@ -25,8 +25,6 @@ Then run the program using:
 **python scripts.py**
 
 
-This will prompt you to add the name of the CSV file. In this case, add "HNGi9 CSV FILE - Sheet1.csv".
-
 A folder "nftjsonfiles" will be created where the json files for all the rows will be stored, 
 
 and an output csv with the hashes appended will be generated. 
