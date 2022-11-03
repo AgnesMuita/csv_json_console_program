@@ -5,23 +5,26 @@ import hashlib
 import pandas as pd
 from pathlib import Path
 import os
-import shutil
 
-jsonoutputlist=[]
-#convert csv to json
+
+def create_directory(directory):
+  parent_dir = os.getcwd()
+  if not os.path.exists("nftjsonfiles"):
+    path = os.path.join(parent_dir, directory)
+    os.mkdir(path)
+create_directory("nftjsonfiles")
+
+
 def make_json(csvFilePath):
+    jsonFilePath=os.getcwd() + "\\nftjsonfiles"
 
-    jsonFilePath="D:/Javascript/hng/hashing_script_with_python/nftjsonfile"
-
-    # open csv reader called DictReader
     with open(csvFilePath, encoding='utf-8') as csvf:
       csvReader = csv.DictReader(csvf, fieldnames=("No","Name","Hash","UUID"))
-      #open json writer and use json.dumps() to dump data
       for row in csvReader:
         out=json.dumps(row, indent=4)
         n=json.loads(out)
         if n['No'] != 'No':
-          jsonoutput = open(jsonFilePath+'/'+str(n['No'])+'.json','w')
+          jsonoutput = open(jsonFilePath+'\\'+str(n['No'])+'.json','w')
           jsonoutput.write(out)
           jsonoutput.close()
       csvf.close()
@@ -30,23 +33,14 @@ def make_json(csvFilePath):
 csvFilePath=input('Enter the absolute path of the csv file')
 
 
-
 make_json(csvFilePath)
 
 
-# directory = "nftjsonfile"
-# parent_dir = Path(Path.cwd()).parent
-# if not os.path.exists("nftjsonfile"):
-#   path = os.path.join(parent_dir, directory)
-#   os.mkdir(path)
-
-
 # calculate sha256
-FilePath = "D:/Javascript/hng/hashing_script_with_python/nftjsonfile"
+FilePath = os.getcwd() + "\\nftjsonfiles"
 for filename in os.listdir(FilePath):
   f=os.path.join(FilePath, filename)
   if os.path.isfile(f):
-    print (f)
     sha256_hash = hashlib.sha256()
     with open(f,'rb')as f:
       for byte_block in iter(lambda: f.read(4096),b""):
