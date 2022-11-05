@@ -27,5 +27,5 @@ Then run the program using:
 
 A folder "nftjsonfiles" will be created where the json files for all the rows will be stored, 
 
-and an output csv with the hashes appended will be generated. 
+and an output csv with the appended hashes will be generated. 
 
