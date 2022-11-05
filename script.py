@@ -1,13 +1,13 @@
-from calendar import c
-import copy
 import csv
-import json
 import hashlib
-import pandas as pd
-from pathlib import Path
+import json
 import os
 
-#create a directory to store the generated  json files
+create_csv = 'filename.csv'
+f = open(create_csv, 'w')
+writer = csv.writer(f)
+
+#create new directory to store the generated json
 def create_directory(directory):
   parent_dir = os.getcwd()
   if not os.path.exists("nftjsonfiles"):
@@ -15,58 +15,61 @@ def create_directory(directory):
     os.mkdir(path)
 create_directory("nftjsonfiles")
 
-
-#convert csv rows to json
-def make_json(csvFilePath):
-    jsonFilePath=os.getcwd() + "\\nftjsonfiles"
-
-    with open(csvFilePath, encoding='utf-8') as csvf:
-      csvReader = csv.DictReader(csvf, fieldnames=("format",'TEAM NAMES', "Series Number",'Filename','Description','Gender','attributes', "UUID"))
+#convert csv to json
+def csv_to_json():
+  with open('HNGi9 CSV FILE - Sheet1.csv', 'r') as csvf:
+      read_csv = csv.reader(csvf, delimiter=',')
+      next(read_csv)
+      csvReader = [a for a in read_csv]
+    # create a json file for each row in the csv file.
       for row in csvReader:
-        row["format"] = "CHIP-0007"
-        # row='{"collection":"Example"}'
-        out=json.dumps(row, indent=4)
-        n=json.loads(out)
-        if n['Filename'] != 'Filename':
-          jsonoutput = open(jsonFilePath+'\\'+str(n['Filename'])+'.json','w')
-          jsonoutput.write(out)
-          jsonoutput.close()
-      csvf.close()
+        if row[1] and row[2]:
+            series_number = row[0]
+            file_name = row[1]
+            name = row[2]
+            description = row[3]
+            gender = row[4]
+            attributes = row[5]
+            uuid = row[6]
 
+            json_file = {
+                'format': 'CHIP-0007',
+                'name': file_name.replace('-', ' ').title(),
+                'description': description,
+                'minting_tool': '',
+                'series_number': series_number,
+                'sensitive_content': False,
+                'series_total': csvReader[-1][0],
+                "attributes": [
+                    {
+                        "trait_type": "gender",
+                        "value": gender
+                    }
+                ],
+                "collection": {
+                    "name": "Zuri NFT tickets for free lunch",
+                    "id": uuid,
+                    "attributes": [
+                        {
+                            "type": "description",
+                            "value": "Rewards for accomplishments during HNGi9"
+                        }
+                    ]
+                },
+            }
 
-# csvFilePath = os.getcwd()+'\\'+ input('enter the name of csv file ')
-csvFilePath = os.getcwd()+'\\' + 'HNGi9 CSV FILE - Sheet1.csv'
-make_json(csvFilePath)
+            # Convert the json file to a string.
+            jsonoutput = json.dumps(json_file, indent=4)
+            with open(f'nftjsonfiles/{name}.json', 'w') as output:
+                output.write(jsonoutput)
+            output.close()
 
+          # Create a hash of the json file and append it to the csv file.
+            hashString = hashlib.sha256(jsonoutput.encode()).hexdigest()
+            row.append(hashString)
+            writer.writerow(row)
 
-# calculate sha256 for each json file and append
-def calculate_hash():
-  hashList = []
-  FilePath = os.getcwd() + "\\nftjsonfiles"
-  for filename in os.listdir(FilePath):
-    f=os.path.join(FilePath, filename)
-    if os.path.isfile(f):
-      sha256_hash = hashlib.sha256()
-      with open(f,'rb')as f:
-        for byte_block in iter(lambda: f.read(4096),b""):
-          sha256_hash.update(byte_block)
-          hashes = sha256_hash.hexdigest()
-          hashList.append(hashes)
+  # Closing the file.
+  f.close()
 
-        # append sha256 to csv line
-      for hash in hashList:
-        df = pd.read_csv(csvFilePath)
-        df["sha256"] = hash
-        fname=Path(csvFilePath).stem
-        df.to_csv(fname+ ".output.csv", index=False)
-
-calculate_hash()
-
-
-
-
-
-
-
-
-
+csv_to_json()
