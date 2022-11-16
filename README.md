@@ -22,10 +22,10 @@ Open the project from its the root directory and install required modules by run
 
 Then run the program using: 
 
-**python scripts.py**
+**python script.py**
 
 
-A folder "nftjsonfiles" will be created where the json files for all the rows will be stored, 
+A folder "newjsonfiles" will be created where the json files for all the rows will be stored, 
 
 and an output csv with the appended hashes will be generated. 
 
